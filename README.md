@@ -1,6 +1,6 @@
 # SharpKit.UnobtrusiveFeatures
 
-This repository contains plugin for [SharpKit](http://www.sharpkit.net) that enables export to javascript without referencing any SharpKit library. The goal behide is to have reference-clear projects, that are "shared" between server and client.
+This repository contains plugin for [SharpKit](http://sharpkit.net) that enables export to javascript without referencing any SharpKit library. The goal behide is to have reference-clear projects, that are "shared" between server and client.
 
 When developing client-side only library, typically UI, there is no need for removing reference to SharpKit. But when such library is re-used in the server project, defining export in SharpKit standard way requires reference to SharpKit, and so requires distributing this library with the server application and also loading the assembly to the AppDomain.
 
