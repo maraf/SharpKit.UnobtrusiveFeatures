@@ -4,6 +4,19 @@ This repository contains plugin for [SharpKit](http://sharpkit.net) that enables
 
 When developing client-side only library, typically UI, there is no need for removing reference to SharpKit. But when such library is re-used in the server project, defining export in SharpKit standard way requires reference to SharpKit, and so requires distributing this library with the server application and also loading the assembly to the AppDomain.
 
+## How to integrate?
+
+As other SharpKit plugins, copy released asemblies to the `C:\Windows\Microsoft.NET\Framework\v4.0.30319\SharpKit\5` and import SharpKit targets with plugin.
+
+```XML
+<ItemGroup>
+    <SkcPlugin Include="SharpKit.UnobtrusiveFeatures.Plugin, SharpKit.UnobtrusiveFeatures">
+        <InProject>false</InProject>
+    </SkcPlugin>
+</ItemGroup>
+<Import Project="$(MSBuildBinPath)\SharpKit\5\SharpKit.Build.targets" />
+```
+
 ## Export
 
 With the UnobtrusiveFeatures plugin there is only XML configuration file and build targets import in the csproj. No reference required for defining export to the javascript.
@@ -33,6 +46,11 @@ Also, the `Filename` and `FilenameFormat` attributes of `Export` element can con
 ```
 
 And this configuration file will export every SharpKit-enabled project to the file named as assembly in the bin folder of the project.
+
+Advanced export features:
+- _Export_ defines global export. With this element we can define fallback file and path format to export all types to.
+- _Namespace_ defines exporting rules to namespace and all subnamespaces. With this element we can exclude whole namespace or change target file name.
+- _Type_ defines exporting rules for concrete class, like using `JsTypeAttribute`.
 
 ## Extended C# artifacts
 
