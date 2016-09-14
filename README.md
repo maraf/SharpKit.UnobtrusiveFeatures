@@ -53,4 +53,4 @@ var TestSharpKit$UI$Presenter = {
 
 # License
 
-[Apache 2.0](blob/master/LICENSE)
+[Apache 2.0](LICENSE)
