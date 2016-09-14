@@ -38,9 +38,17 @@ And this configuration file will export every SharpKit-enabled project to the fi
 
 The plugin also exports some C# artifacts that are not export the SharpKit it self. The first one is a `IsAbstract` flag, that contains information whether the class can be instantiated. 
 
+```Javascript
+var TestSharpKit$UI$Presenter = {
+    ...
+    IsAbstract: false,
+    ...
+}
+```
+
 The second one is a list of constructors defined in the class. With this feature, we can simply build IoC container with constructor injection. The export looks like:
 
-```JSON
+```Javascript
 var TestSharpKit$UI$Presenter = {
     ...
     ctors: [{
