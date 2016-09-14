@@ -49,6 +49,7 @@ And this configuration file will export every SharpKit-enabled project to the fi
 
 Advanced export features:
 - _Export_ defines global export. With this element we can define fallback file and path format to export all types to.
+- _ExternalTypes_ can be used, when we want to export used attributes which are referenced from assemblies, that we don't have source files for. As SharpKit such attributes automatically ommits, we can override this behavior to include them in the compilation. Note: Only the use of attributes is compiled. We are responsible to provide javascript type defines ourselves.
 - _Namespace_ defines exporting rules to namespace and all subnamespaces. With this element we can exclude whole namespace or change target file name.
 - _Type_ defines exporting rules for concrete class, like using `JsTypeAttribute`.
 
