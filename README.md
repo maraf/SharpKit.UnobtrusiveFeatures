@@ -1,10 +1,10 @@
-# SharpKit.UnobtrusiveFeatures
+# UnobtrusiveFeatures
 
 This repository contains plugin for [SharpKit](http://sharpkit.net) that enables export to javascript without referencing any SharpKit library. The goal behide is to have reference-clear projects, that are "shared" between server and client.
 
 When developing client-side only library, typically UI, there is no need for removing reference to SharpKit. But when such library is re-used in the server project, defining export in SharpKit standard way requires reference to SharpKit, and so requires distributing this library with the server application and also loading the assembly to the AppDomain.
 
-## Unobtrusive export
+## Export
 
 With the UnobtrusiveFeatures plugin there is only XML configuration file and build targets import in the csproj. No reference required for defining export to the javascript.
 
@@ -34,7 +34,7 @@ Also, the `Filename` and `FilenameFormat` attributes of `Export` element can con
 
 And this configuration file will export every SharpKit-enabled project to the file named as assembly in the bin folder of the project.
 
-## Constructor export
+## Extended C# artifacts
 
 The plugin also exports some C# artifacts that are not export the SharpKit it self. The first one is a `IsAbstract` flag, that contains information whether the class can be instantiated. 
 
