@@ -15,8 +15,6 @@ namespace SharpKit.UnobtrusiveFeatures.Exports.Models
     /// </summary>
     public class AssemblyExport
     {
-        private readonly AssemblyExport parent;
-
         private Dictionary<string, TypeExport> typeItems;
         private List<NamespaceExport> namespaceItems;
         private List<MergeFile> mergeFiles;
@@ -30,7 +28,10 @@ namespace SharpKit.UnobtrusiveFeatures.Exports.Models
         /// <summary>
         /// Identifiers whether anything is exporting from this assembly.
         /// </summary>
-        public bool IsExportAssembly { get; set; }
+        public bool IsExportAssembly
+        {
+            get { return DefaultExport != null; }
+        }
 
         /// <summary>
         /// Default export settings.
@@ -39,11 +40,6 @@ namespace SharpKit.UnobtrusiveFeatures.Exports.Models
 
         public AssemblyExport()
         { }
-
-        public AssemblyExport(AssemblyExport parent)
-        {
-            this.parent = parent;
-        }
 
         /// <summary>
         /// Adds registration for namespace.
@@ -141,8 +137,8 @@ namespace SharpKit.UnobtrusiveFeatures.Exports.Models
                     return item;
             }
 
-            if (parent != null)
-                return parent.FindTypeFromTypeRegistry(targetTypeName);
+            //if (parent != null)
+            //    return parent.FindTypeFromTypeRegistry(targetTypeName);
 
             return null;
         }
@@ -178,8 +174,8 @@ namespace SharpKit.UnobtrusiveFeatures.Exports.Models
                 }
             }
 
-            if (parent != null)
-                return parent.FindTypeFromNamespaceRegistry(targetTypeName);
+            //if (parent != null)
+            //    return parent.FindTypeFromNamespaceRegistry(targetTypeName);
 
             return null;
         }
@@ -261,15 +257,13 @@ namespace SharpKit.UnobtrusiveFeatures.Exports.Models
 
         private string FindDefaultFileName()
         {
-            if (DefaultExport == null)
-            {
-                if (parent == null)
-                    return null;
+            if (DefaultExport != null)
+                return DefaultExport.Filename;
+            
+            //if (parent != null)
+            //    return parent.FindDefaultFileName();
 
-                return parent.FindDefaultFileName();
-            }
-
-            return DefaultExport.Filename;
+            return null;
         }
 
         /// <summary>
@@ -296,8 +290,8 @@ namespace SharpKit.UnobtrusiveFeatures.Exports.Models
 
             if (DefaultExport != null && !String.IsNullOrEmpty(DefaultExport.FilenameFormat))
                 format = DefaultExport.FilenameFormat;
-            else if (parent != null)
-                format = parent.FindDefaultFileNameFormat();
+            //else if (parent != null)
+            //    format = parent.FindDefaultFileNameFormat();
 
             if (String.IsNullOrEmpty(format))
                 return null;
@@ -336,8 +330,8 @@ namespace SharpKit.UnobtrusiveFeatures.Exports.Models
         public IEnumerable<MergeFile> GetMergeItems()
         {
             IEnumerable<MergeFile> result = Enumerable.Empty<MergeFile>();
-            if (parent != null)
-                result = Enumerable.Concat(result, parent.GetMergeItems());
+            //if (parent != null)
+            //    result = Enumerable.Concat(result, parent.GetMergeItems());
 
             if (mergeFiles != null)
                 result = Enumerable.Concat(result, mergeFiles);
@@ -352,8 +346,8 @@ namespace SharpKit.UnobtrusiveFeatures.Exports.Models
         public IEnumerable<string> GetExternalTypes()
         {
             IEnumerable<string> result = Enumerable.Empty<string>();
-            if (parent != null)
-                result = Enumerable.Concat(result, parent.GetExternalTypes());
+            //if (parent != null)
+            //    result = Enumerable.Concat(result, parent.GetExternalTypes());
 
             if (externalTypes != null)
                 result = Enumerable.Concat(result, externalTypes);

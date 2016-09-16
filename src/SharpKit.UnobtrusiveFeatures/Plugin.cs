@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace SharpKit.UnobtrusiveFeatures
 {
@@ -33,7 +34,7 @@ namespace SharpKit.UnobtrusiveFeatures
         #region ExpressionExtension
 
         private ExpressionExtension expression;
-        
+
         #endregion
 
         #region CtorExportExtension
@@ -60,27 +61,48 @@ namespace SharpKit.UnobtrusiveFeatures
 
         public void Init(ICompiler compiler)
         {
-            this.compiler = compiler;
-            compiler.AfterParseCs += Compiler_AfterParseCs;
-            compiler.AfterConvertCsToJsEntity += Compiler_AfterConvertCsToJsEntity;
+            try
+            {
+                this.compiler = compiler;
+                compiler.AfterParseCs += Compiler_AfterParseCs;
+                compiler.AfterConvertCsToJsEntity += Compiler_AfterConvertCsToJsEntity;
 
-            export = new ExportExtension(exportAdditionalNameFileNames, debug);
-            //expression = new ExpressionExtension(configuration.GetString("ExpressionPrefixes", "Neptuo").Split(','), debug);
-            ctorExport = new CtorExportExtension(debug);
-            isAbstract = new IsAbtractExportExtension(debug);
+                export = new ExportExtension(exportAdditionalNameFileNames, debug);
+                //expression = new ExpressionExtension(configuration.GetString("ExpressionPrefixes", "Neptuo").Split(','), debug);
+                ctorExport = new CtorExportExtension(debug);
+                isAbstract = new IsAbtractExportExtension(debug);
+            }
+            catch (Exception e)
+            {
+                File.WriteAllText(@"C:\Temp\ErrorLog.txt", e.ToString());
+            }
         }
 
         private void Compiler_AfterParseCs()
         {
-            export.Process(compiler.CsCompilation.Assemblies, compiler.CustomAttributeProvider);
-            //expression.PrepareMethodCache(compiler.CsCompilation.Assemblies);
+            try
+            {
+                export.Process(compiler.CsCompilation.Assemblies, compiler.CustomAttributeProvider);
+                //expression.PrepareMethodCache(compiler.CsCompilation.Assemblies);
+            }
+            catch (Exception e)
+            {
+                File.WriteAllText(@"C:\Temp\ErrorLog.txt", e.ToString());
+            }
         }
 
         private void Compiler_AfterConvertCsToJsEntity(IEntity arg1, JsNode arg2)
         {
-            //expression.Process(arg1, arg2);
-            ctorExport.Process(arg1, arg2);
-            isAbstract.Process(arg1, arg2);
+            try
+            {
+                //expression.Process(arg1, arg2);
+                ctorExport.Process(arg1, arg2);
+                isAbstract.Process(arg1, arg2);
+            }
+            catch (Exception e)
+            {
+                File.WriteAllText(@"C:\Temp\ErrorLog.txt", e.ToString());
+            }
         }
     }
 }

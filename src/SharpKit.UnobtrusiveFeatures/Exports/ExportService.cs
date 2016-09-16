@@ -17,7 +17,6 @@ namespace SharpKit.UnobtrusiveFeatures.Exports
     /// </summary>
     public class ExportService
     {
-        private readonly Dictionary<string, AssemblyExport> folderCache = new Dictionary<string, AssemblyExport>();
         private readonly string[] additionalNameFileNames;
 
         public ExportService(string[] additionalNameFileNames)
@@ -36,39 +35,23 @@ namespace SharpKit.UnobtrusiveFeatures.Exports
                 IEnumerable<string> filePaths = filenames.Select(f => Path.Combine(directoryPath, f)).Where(File.Exists);
                 foreach (string filePath in filePaths)
                     applicableFiles.Push(filePath);
-                
+
                 directoryPath = Path.GetDirectoryName(directoryPath);
             }
 
-            AssemblyExport parent = null;
+            AssemblyExport result = new AssemblyExport();
+            result.Assembly = assembly;
+
             while (applicableFiles.Count > 0)
             {
                 string filePath = applicableFiles.Pop();
-                AssemblyExport item;
-                if (!folderCache.TryGetValue(filePath, out item))
-                    item = LoadFile(filePath, parent);
-
-                parent = item;
+                LoadFileWithoutBuildUp(result, filePath);
             }
 
-            AssemblyExport result = new AssemblyExport(parent);
-            foreach (string filePath in GetConfigurationFilenames(assembly).Where(File.Exists))
-                LoadFileWithoutBuildUp(result, filePath);
-            
-            result.IsExportAssembly = true;
-            result.Assembly = assembly;
             result.BuildUp();
             return result;
         }
-
-        private AssemblyExport LoadFile(string filePath, AssemblyExport parent)
-        {
-            AssemblyExport result = new AssemblyExport(parent);
-            LoadFileWithoutBuildUp(result, filePath);
-            result.BuildUp();
-            return result;
-        }
-
+        
         private void LoadFileWithoutBuildUp(AssemblyExport result, string filePath)
         {
             XmlDocument document = new XmlDocument();
@@ -81,7 +64,11 @@ namespace SharpKit.UnobtrusiveFeatures.Exports
             }
 
             foreach (XmlElement element in document.GetElementsByTagName("Export"))
-                result.DefaultExport = LoadExport(element);
+            {
+                DefaultExport export = LoadExport(element);
+                if (export != null)
+                    result.DefaultExport = export;
+            }
 
             foreach (XmlElement element in document.GetElementsByTagName("Namespace"))
                 result.AddNamespace(LoadNamespace(element, result));
@@ -104,7 +91,6 @@ namespace SharpKit.UnobtrusiveFeatures.Exports
             {
                 return new AssemblyExport()
                 {
-                    IsExportAssembly = false,
                     Assembly = assembly
                 };
             }
